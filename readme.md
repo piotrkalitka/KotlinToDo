@@ -88,6 +88,7 @@ curl -X POST http://localhost:8080/api/todos \
 - Integration of Redis
 - Integration of Kafka or RabbitMQ depending on requirements
 - Separation of a user management microservice
+- Implementation of unit and integration tests
 
 ## Author
 [Piotr Kalitka / piotrkalitka]
