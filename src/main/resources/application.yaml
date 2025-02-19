@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: FlutterToDo
+  datasource:
+    url: jdbc:postgresql://${dbIp}:${dbPort}/${dbName}
+    username: ${dbUsername}
+    password: ${dbPassword}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  liquibase:
+    enabled: true
+    change-log: db/changelog/changelog-master.yaml
+    url: jdbc:postgresql://${dbIp}:${dbPort}/${dbName}
+    user: ${dbUsername}
+    password: ${dbPassword}
+    driver-class-name: org.postgresql.Driver
+    liquibase-schema: public
+app:
+  jwtSecret: ${jwtSecret}
+  jwtExpirationMs: ${jwtExpirationMs}
+  jwtRefreshExpirationMs: ${jwtRefreshExpirationMs}
+  redis:
+    host: localhost
+    port: 6379

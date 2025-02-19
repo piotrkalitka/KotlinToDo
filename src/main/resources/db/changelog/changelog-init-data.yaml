@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: piotrkalitka
+      changes:
+        - sqlFile:
+            path: db/data/init/roles.sql
+        - sqlFile:
+            path: db/data/init/users.sql
+        - sqlFile:
+            path: db/data/init/user_roles.sql
