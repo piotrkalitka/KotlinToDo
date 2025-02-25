@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
 	kotlin("plugin.jpa") version "1.9.25"
 	id("org.liquibase.gradle") version "2.2.0"
+	groovy
 }
 
 group = "com.piotrkalitka"
@@ -37,12 +38,24 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 	runtimeOnly("org.postgresql:postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation ("io.lettuce:lettuce-core:6.5.1.RELEASE")
+
+	testImplementation("org.spockframework:spock-core:2.4-M5-groovy-4.0")
+	testImplementation("org.spockframework:spock-spring:2.4-M5-groovy-4.0")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:3.4.0") {
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+	}
+
+	testImplementation("org.testcontainers:spock:1.19.3")
+	testImplementation("org.testcontainers:postgresql:1.19.3")
+	testImplementation("org.postgresql:postgresql")
+	testImplementation("org.liquibase:liquibase-core:4.23.0")
+
+	testImplementation("org.apache.groovy:groovy-json:4.0.25")
 }
 
 dependencies {
