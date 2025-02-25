@@ -13,10 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(
-    @Autowired val userRepository: UserRepository,
-    @Autowired val passwordEncoder: PasswordEncoder,
-    @Autowired val roleRepository: RoleRepository
+class UserService @Autowired constructor(
+    val userRepository: UserRepository,
+    val passwordEncoder: PasswordEncoder,
+    val roleRepository: RoleRepository
 ) {
 
     fun getAllUsers(): List<User> {

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class TaskService(
-    @Autowired val userService: UserService,
-    @Autowired val taskRepository: TaskRepository
+class TaskService @Autowired constructor(
+    val userService: UserService,
+    val taskRepository: TaskRepository
 ) {
 
     fun findTaskById(taskId: Long): Task {

@@ -1,0 +1,41 @@
+services:
+  app:
+    container_name: todoapp
+    ports:
+      - "8080:8080"
+    environment:
+      DB_IP: todoapp-db
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
+      JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS}
+    restart: on-failure:1
+    build:
+      context: .
+    depends_on:
+      - db
+    networks:
+      - todoapp-network
+
+  db:
+    image: postgres:latest
+    container_name: todoapp-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - todoapp-db-data:/var/lib/postgresql/data
+    networks:
+      - todoapp-network
+
+networks:
+  todoapp-network:
+
+volumes:
+  todoapp-db-data:

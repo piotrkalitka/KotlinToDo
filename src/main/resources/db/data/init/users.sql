@@ -1,1 +1,1 @@
-INSERT INTO users (id, username, email, password) VALUES(1, 'admin', 'admin@fluttertodo.pl', 'password')
+INSERT INTO users (username, email, password) VALUES('admin', 'admin@fluttertodo.pl', 'password')

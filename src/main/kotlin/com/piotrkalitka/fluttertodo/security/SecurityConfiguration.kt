@@ -17,10 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
-class SecurityConfiguration(
-    @Autowired val jwtUtils: JwtUtils,
-    @Autowired val userDetailsService: UserDetailsService,
-    @Autowired val unauthorizedHandler: AuthEntryPointJwt,
+class SecurityConfiguration @Autowired constructor(
+    val jwtUtils: JwtUtils,
+    val userDetailsService: UserDetailsService,
+    val unauthorizedHandler: AuthEntryPointJwt,
 ) {
 
     @Bean

@@ -21,40 +21,18 @@ A simple task management (ToDo) application written in Kotlin, using Spring Boot
 - Liquibase
 - Maven / Gradle
 
-## Database Configuration
-The application uses PostgreSQL by default. Example configuration in the `application.properties` file:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/todo_db
-spring.datasource.username=postgres
-spring.datasource.password=yourpassword
-spring.jpa.hibernate.ddl-auto=update
-```
-
 ## Running the Application
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo-url.git
+   git clone https://github.com/piotrkalitka/KotlinToDo.git
    ```
 2. Navigate to the project directory:
    ```bash
    cd todo-app
    ```
-3. Build the project:
+3. Build and run the project:
    ```bash
-   ./gradlew build
-   ```
-   or
-   ```bash
-   mvn clean install
-   ```
-4. Run the application:
-   ```bash
-   ./gradlew bootRun
-   ```
-   or
-   ```bash
-   mvn spring-boot:run
+   docker-compose up
    ```
 
 ## API Endpoints
@@ -84,7 +62,7 @@ curl -X POST http://localhost:8080/api/todos \
 ```
 
 ## Next Steps
-- Implementation of refresh token
+- Implementation of unit and integration (Spock) tests
 - Integration of Redis
 - Integration of Kafka or RabbitMQ depending on requirements
 - Separation of a user management microservice

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/user")
-class UserController(
-    @Autowired val userService: UserService
+class UserController @Autowired constructor(
+    val userService: UserService
 ) {
 
     @GetMapping

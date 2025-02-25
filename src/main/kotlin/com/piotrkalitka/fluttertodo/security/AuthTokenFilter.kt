@@ -13,9 +13,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 
-class AuthTokenFilter(
-    @Autowired val jwtUtils: JwtUtils,
-    @Autowired val userDetailsService: UserDetailsService,
+class AuthTokenFilter @Autowired constructor(
+    val jwtUtils: JwtUtils,
+    val userDetailsService: UserDetailsService,
     val logger: Logger = LoggerFactory.getLogger(AuthTokenFilter::class.java)
 ) : OncePerRequestFilter() {
 

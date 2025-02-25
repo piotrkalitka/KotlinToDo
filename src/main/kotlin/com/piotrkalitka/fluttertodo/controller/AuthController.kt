@@ -1,8 +1,10 @@
 package com.piotrkalitka.fluttertodo.controller
 
 import com.piotrkalitka.fluttertodo.controller.dto.request.LoginRequest
+import com.piotrkalitka.fluttertodo.controller.dto.request.RefreshTokenRequestBody
 import com.piotrkalitka.fluttertodo.controller.dto.request.RegisterRequest
 import com.piotrkalitka.fluttertodo.controller.dto.response.JwtResponse
+import com.piotrkalitka.fluttertodo.exception.UsernameNotFoundException
 import com.piotrkalitka.fluttertodo.jpa.entity.ERole
 import com.piotrkalitka.fluttertodo.jpa.entity.Role
 import com.piotrkalitka.fluttertodo.jpa.entity.User
@@ -10,6 +12,7 @@ import com.piotrkalitka.fluttertodo.jpa.repository.RoleRepository
 import com.piotrkalitka.fluttertodo.jpa.repository.UserRepository
 import com.piotrkalitka.fluttertodo.security.JwtUtils
 import com.piotrkalitka.fluttertodo.security.UserDetailsImpl
+import com.piotrkalitka.fluttertodo.service.RefreshTokenService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -25,12 +28,13 @@ import java.util.stream.Collectors
 
 @RestController
 @RequestMapping("/api/auth")
-class AuthController(
-    @Autowired val authenticationManager: AuthenticationManager,
-    @Autowired val userRepository: UserRepository,
-    @Autowired val roleRepository: RoleRepository,
-    @Autowired val encoder: PasswordEncoder,
-    @Autowired val jwtUtils: JwtUtils
+class AuthController @Autowired constructor(
+    val authenticationManager: AuthenticationManager,
+    val userRepository: UserRepository,
+    val roleRepository: RoleRepository,
+    val encoder: PasswordEncoder,
+    val jwtUtils: JwtUtils,
+    val refreshTokenService: RefreshTokenService
 ) {
 
     @PostMapping("/login")
@@ -43,13 +47,21 @@ class AuthController(
         val jwt = jwtUtils.generateJwtToken(authentication)
 
         val userDetails = authentication.principal as UserDetailsImpl
-        val roles = userDetails.authorities.stream()
-            .map { item -> item.authority }
-            .collect(Collectors.toList())
+        val user = userRepository.findByUsername(userDetails.username)
+            .orElseThrow { UsernameNotFoundException(userDetails.username) }
+
+        if (refreshTokenService.existsByUser(user)) {
+            refreshTokenService.deleteByUser(user)
+        }
+
+        val refreshToken = refreshTokenService.createRefreshToken(user)
+        val roles = getUserRoles(userDetails)
+
 
         return ResponseEntity.ok(
             JwtResponse(
                 accessToken = jwt,
+                refreshToken = refreshToken.token,
                 id = userDetails.id,
                 username = userDetails.username,
                 email = userDetails.email,
@@ -78,6 +90,33 @@ class AuthController(
         user.roles = roles
         val persistedUser = userRepository.save(user)
         return ResponseEntity.status(201).body(persistedUser)
+    }
+
+    @PostMapping("/refresh")
+    fun refreshToken(@RequestBody request: RefreshTokenRequestBody): ResponseEntity<JwtResponse> {
+        val refreshToken = refreshTokenService.getByToken(request.refreshToken)
+        val validToken = refreshTokenService.verifyExpiration(refreshToken)
+
+        val user = validToken.user
+        val accessToken = jwtUtils.generateTokenFromUsername(user.username)
+
+        val roles = user.roles
+            .map { role: Role -> role.name.name }
+
+        return ResponseEntity.ok(JwtResponse(
+            id = user.id,
+            username = user.username,
+            email = user.email,
+            roles = roles,
+            accessToken = accessToken,
+            refreshToken = request.refreshToken
+        ))
+    }
+
+    private fun getUserRoles(userDetails: UserDetailsImpl): List<String> {
+        return userDetails.authorities.stream()
+            .map { item -> item.authority }
+            .collect(Collectors.toList())
     }
 
 }

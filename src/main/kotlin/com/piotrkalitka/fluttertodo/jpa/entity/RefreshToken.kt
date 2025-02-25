@@ -1,20 +1,24 @@
 package com.piotrkalitka.fluttertodo.jpa.entity
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.geo.Distance
-import org.springframework.data.redis.core.RedisHash
+import jakarta.persistence.*
 import java.time.Instant
 
-@RedisHash("RefreshToken")
+@Entity
+@Table(name = "refresh_tokens")
 data class RefreshToken(
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     val user: User,
 
+    @Column(nullable = false, unique = true)
     val token: String,
 
+    @Column(nullable = false)
     val expiryDate: Instant
 
 )

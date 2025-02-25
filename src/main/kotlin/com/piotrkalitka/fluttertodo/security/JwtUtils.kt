@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -59,13 +60,15 @@ class JwtUtils {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken)
             return true
         } catch (e: MalformedJwtException) {
-            logger.error("Invalid JWT token: $authToken", e)
+            logger.error("Invalid JWT token: $authToken")
         } catch (e: ExpiredJwtException) {
-            logger.error("Expired JWT token: $authToken", e)
+            logger.error("Expired JWT token: $authToken")
         } catch (e: UnsupportedJwtException) {
-            logger.error("Unsupported JWT token: $authToken", e)
+            logger.error("Unsupported JWT token: $authToken")
         } catch (e: IllegalArgumentException) {
-            logger.error("JWT claims string empty: $authToken", e)
+            logger.error("JWT claims string empty: $authToken")
+        } catch (e: SignatureException) {
+            logger.error("Jwt signature is invalid: $authToken")
         }
 
         return false

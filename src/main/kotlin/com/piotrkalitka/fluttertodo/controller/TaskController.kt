@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/task")
-class TaskController(
-    @Autowired private val taskService: TaskService
+class TaskController @Autowired constructor(
+    private val taskService: TaskService
 ) {
 
     @GetMapping("{id}")
