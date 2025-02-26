@@ -29,6 +29,7 @@ data class Task(
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonIgnore
     val owner: User
 
 )

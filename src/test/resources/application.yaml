@@ -8,6 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
+    contexts: test
     drop-first: true
     change-log: db/changelog/changelog-master.yaml
     user: testuser

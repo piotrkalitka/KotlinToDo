@@ -1,7 +1,7 @@
 FROM gradle:8.11-jdk17-alpine AS build
 WORKDIR /app/src
 COPY . .
-RUN gradle build
+RUN gradle build -x test
 COPY build/libs/FlutterToDo-0.0.1-SNAPSHOT.jar /app/ToDoApp.jar
 RUN rm -rf /app/src
 
